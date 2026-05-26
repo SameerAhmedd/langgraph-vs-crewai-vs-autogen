@@ -1,0 +1,23 @@
+[
+  {
+    "framework": "LangGraph",
+    "status": "success",
+    "reason": "",
+    "error": "",
+    "duration_seconds": 12.023
+  },
+  {
+    "framework": "CrewAI",
+    "status": "fallback",
+    "reason": "Framework disabled for low-cost run",
+    "error": "",
+    "duration_seconds": 0.0
+  },
+  {
+    "framework": "AutoGen",
+    "status": "success",
+    "reason": "",
+    "error": "",
+    "duration_seconds": 11.417
+  }
+]

@@ -1,0 +1,13 @@
+python-dotenv>=1.0.1
+pandas>=2.2.0
+langgraph>=0.2.0
+langchain>=0.3.0
+langchain-openai>=0.2.0
+crewai>=0.95.0
+autogen-agentchat>=0.4.0
+autogen-ext[openai]>=0.4.0
+openai>=1.50.0
+jupyter>=1.1.1
+nbformat>=5.10.4
+pytest>=8.0.0
+

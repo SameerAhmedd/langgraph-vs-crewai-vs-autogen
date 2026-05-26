@@ -1,0 +1,21 @@
+{
+  "task_id": "study-plan-001",
+  "task_title": "Generate a structured 7-day study plan",
+  "student_profile": "Bachelor Computer Science student",
+  "goal": "Revise Python basics, file handling, regular expressions, and simple data analysis.",
+  "constraints": {
+    "duration_days": 7,
+    "study_time_per_day": "2 hours",
+    "preferred_style": "Beginner-friendly explanations and practical exercises"
+  },
+  "expected_output_format": {
+    "formats": ["JSON", "Markdown"],
+    "required_sections": [
+      "title",
+      "overview",
+      "daily_plan",
+      "summary"
+    ]
+  }
+}
+

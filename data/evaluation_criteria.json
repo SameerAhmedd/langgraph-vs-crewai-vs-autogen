@@ -1,0 +1,73 @@
+[
+  {
+    "criterion_name": "Architecture design",
+    "description": "How clearly the implementation structure represents the workflow architecture.",
+    "observation_method": "Inspect code structure, runner behavior, and saved workflow observations after execution.",
+    "rating_scale": "1 = weak evidence, 5 = strong evidence",
+    "notes_field": ""
+  },
+  {
+    "criterion_name": "Workflow control",
+    "description": "How explicitly the framework controls task order, transitions, and execution boundaries.",
+    "observation_method": "Compare graph edges, task sequencing, or conversation flow in code and logs.",
+    "rating_scale": "1 = implicit or unclear, 5 = explicit and easy to trace",
+    "notes_field": ""
+  },
+  {
+    "criterion_name": "State handling",
+    "description": "How intermediate data is represented, passed, and updated during the workflow.",
+    "observation_method": "Review state object, task outputs, conversation messages, and execution log.",
+    "rating_scale": "1 = hidden or difficult to inspect, 5 = explicit and transparent",
+    "notes_field": ""
+  },
+  {
+    "criterion_name": "Tool integration",
+    "description": "How easily the implementation can call helper functions or external tools.",
+    "observation_method": "Inspect where shared formatting, parsing, or model calls are attached to the workflow.",
+    "rating_scale": "1 = difficult to integrate, 5 = natural and well supported",
+    "notes_field": ""
+  },
+  {
+    "criterion_name": "Agent coordination",
+    "description": "How the framework represents collaboration between roles, agents, or workflow nodes.",
+    "observation_method": "Compare node coordination, role-based agents, and conversational multi-agent behavior.",
+    "rating_scale": "1 = little coordination support, 5 = clear coordination model",
+    "notes_field": ""
+  },
+  {
+    "criterion_name": "Transparency and debugging",
+    "description": "How observable the workflow is during development and execution.",
+    "observation_method": "Review logs, metadata, error handling, and intermediate step visibility.",
+    "rating_scale": "1 = opaque, 5 = highly traceable",
+    "notes_field": ""
+  },
+  {
+    "criterion_name": "Ease of use",
+    "description": "How straightforward the framework is to implement for a small automation task.",
+    "observation_method": "Reflect on setup steps, amount of framework-specific code, and friction during execution.",
+    "rating_scale": "1 = difficult, 5 = easy",
+    "notes_field": ""
+  },
+  {
+    "criterion_name": "Development complexity",
+    "description": "How much code and conceptual overhead the prototype needs for the scenario.",
+    "observation_method": "Inspect implementation size, abstractions, and number of moving parts.",
+    "rating_scale": "1 = very complex, 5 = low complexity",
+    "notes_field": ""
+  },
+  {
+    "criterion_name": "Output structure",
+    "description": "How reliably the implementation returns the required JSON and Markdown formats.",
+    "observation_method": "Inspect generated output files and parse status.",
+    "rating_scale": "1 = unreliable or missing, 5 = complete and consistent",
+    "notes_field": ""
+  },
+  {
+    "criterion_name": "Suitability for lightweight task automation",
+    "description": "How suitable the framework appears for the selected small academic task.",
+    "observation_method": "Interpret observed implementation behavior, setup effort, and result quality after running.",
+    "rating_scale": "1 = poor fit, 5 = strong fit",
+    "notes_field": ""
+  }
+]
+
