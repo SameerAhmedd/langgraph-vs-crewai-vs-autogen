@@ -120,13 +120,27 @@ def _run_real_crewai(
         max_iter=1,
     )
 
+    # The Requirement Analyst previously had no task, so it never ran. It now produces the
+    # constraint summary that the Study Planner receives as context.
+    analysis_task = Task(
+        description=(
+            "Analyze this student requirement and list the student profile, learning goals, "
+            "time constraints, preferred style, and required output sections. Be concise.\n\n"
+            f"Student profile: {task['student_profile']}\n"
+            f"Goal: {task['goal']}\n"
+            f"Constraints: {task['constraints']}"
+        ),
+        expected_output="A short bullet list of the student's profile, goals, constraints, and output requirements.",
+        agent=requirement_analyst,
+    )
     planning_task = Task(
         description=(
-            "Create the final JSON directly. Use the student requirement and keep it concise. "
+            "Create the final JSON directly. Use the requirement analysis and keep it concise. "
             + build_study_plan_prompt(task, "CrewAI")
         ),
         expected_output="Only valid JSON with exactly seven daily_plan entries.",
         agent=study_planner,
+        context=[analysis_task],
     )
     review_task = Task(
         description=(
@@ -140,7 +154,7 @@ def _run_real_crewai(
 
     crew = Crew(
         agents=[requirement_analyst, study_planner, quality_reviewer],
-        tasks=[planning_task, review_task],
+        tasks=[analysis_task, planning_task, review_task],
         process=Process.sequential,
         verbose=False,
     )
