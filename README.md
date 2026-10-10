@@ -1,205 +1,132 @@
-# Comparative Analysis of Agentic AI Frameworks for Task Automation
+# LangGraph vs CrewAI vs AutoGen: one task, three agent frameworks
 
-Bachelor thesis prototype for IU International University of Applied Sciences.
+[![CI](https://github.com/SameerAhmedd/Agentic-AI/actions/workflows/ci.yml/badge.svg)](https://github.com/SameerAhmedd/Agentic-AI/actions/workflows/ci.yml)
 
-Thesis title: **Comparative Analysis of Agentic AI Frameworks for Task Automation: Evaluating LangGraph, CrewAI, and AutoGen**
+The same task, a structured 7-day study plan, implemented in three agentic AI frameworks and compared on workflow control, state handling, transparency and development complexity. Each run produces normalised JSON and Markdown output plus an execution log, so the frameworks can be compared on equal terms.
 
-- Author: Sameer Ahmed Shaikh
+Originally built for my B.Sc. Computer Science thesis at IU International University of Applied Sciences (2026). The exact state described in the thesis is tagged [`thesis-submission`](https://github.com/SameerAhmedd/Agentic-AI/tree/thesis-submission); this branch contains later fixes and extensions (see [Status](#status-and-roadmap)).
 
-## Research Purpose
+## What I found
 
-This project is a lightweight academic prototype that compares three agentic AI frameworks for the same task automation scenario:
+| Framework | Design | Strongest when | Cost of using it |
+|---|---|---|---|
+| **LangGraph** | Explicit graph: nodes, edges, a typed state object | You need an inspectable, repeatable pipeline | More code than a direct prompt for a small task |
+| **AutoGen** | Planner and Reviewer agents talking to each other | The task benefits from a draft-and-review loop | Async orchestration, termination rules and JSON extraction from chat messages |
+| **CrewAI** | Role-based agents, tasks and a crew | The work splits naturally into roles | Not run live in the thesis run (see below) |
 
-- LangGraph
-- CrewAI
-- AutoGen
+- **No framework wins everywhere.** The right choice depends on the shape of the task and how much control and traceability you need.
+- **LangGraph was the easiest to debug**: named nodes, an explicit state object and a saved step log show where a run went wrong.
+- **AutoGen was the most flexible**, but state lives in the conversation history, so you inspect messages to see how the final answer came about.
+- **CrewAI was implemented but not executed live** in the final thesis run, so it is assessed from its structure and documentation, not from observed output.
 
-The purpose is to support Chapter 5, **Prototype Design and Implementation**, and Chapter 6, **Comparative Evaluation**. The prototype focuses on workflow architecture, agent coordination, state handling, tool integration, workflow control, transparency, ease of use, development complexity, and suitability for lightweight automation.
+Caveat: this is one task, run once per framework, with a qualitative comparison. It is not a benchmark. A repeated-run evaluation is planned (see roadmap).
 
-This is not a production benchmark and does not claim universal framework superiority.
-
-## Scenario
-
-The mandatory scenario is:
+## The task
 
 > Generate a structured 7-day study plan from a student requirement.
 
-The synthetic input describes a Bachelor Computer Science student who wants to revise Python basics, file handling, regular expressions, and simple data analysis with two hours of study time per day.
+The synthetic input is a Bachelor Computer Science student who wants to revise Python basics, file handling, regular expressions and simple data analysis in two hours per day. No real personal data is used.
 
-Each framework attempts the same workflow:
+Each framework runs the same workflow:
 
 1. Understand the requirement
 2. Decompose it into study goals
-3. Generate a 7-day plan
-4. Add daily practice tasks
-5. Produce JSON and Markdown output
-6. Log execution metadata and errors
+3. Generate a 7-day plan with daily practice tasks
+4. Produce JSON and Markdown output
+5. Log execution metadata and errors
 
-## Project Structure
-
-```text
-agentic-ai-framework-comparison/
-├── README.md
-├── requirements.txt
-├── .env.example
-├── .gitignore
-├── main.py
-├── config/
-├── data/
-├── outputs/
-├── src/
-│   ├── common/
-│   ├── langgraph_impl/
-│   ├── crewai_impl/
-│   └── autogen_impl/
-├── notebooks/
-├── docs/
-└── tests/
-```
-
-## Setup
-
-Create and activate a virtual environment:
+## Quick start
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate
-```
-
-On Windows PowerShell:
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-```
-
-Install dependencies:
-
-```bash
+source .venv/bin/activate        # Windows: .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
-```
-
-Create your environment file:
-
-```bash
 cp .env.example .env
 ```
 
-Add your key if you want real LLM execution:
-
-```text
-OPENAI_API_KEY=your_key_here
-OPENAI_MODEL=gpt-4o-mini
-MOCK_MODE=false
-LOW_COST_MODE=true
-```
-
-If no API key is present, the project runs in clearly labelled fallback demonstration mode. Fallback mode is useful for testing the code structure and file generation, but it must not be interpreted as real LLM output.
-
-## Run
-
-```bash
-python main.py
-```
-
-## Low-Cost Safe Running Mode
-
-Recommended first run:
+Run without any API key (clearly labelled fallback output, useful to verify the pipeline):
 
 ```bash
 MOCK_MODE=true python main.py
 ```
 
-This mode makes no live OpenAI API calls. It generates clearly labelled fallback demonstration output so you can verify files, screenshots, and appendix material safely.
-
-Real API run:
+Run live (needs `OPENAI_API_KEY` in `.env`):
 
 ```bash
-MOCK_MODE=false LOW_COST_MODE=true python main.py
+MOCK_MODE=false python main.py
 ```
 
-Low-cost mode keeps requests conservative with short outputs, a request timeout, and limited retries.
+Run the tests (no API key or network needed):
 
-Do not repeatedly run CrewAI or AutoGen with real API credentials if connection errors occur, because retries may consume credits.
+```bash
+pytest
+```
 
-Expected output files:
+Outputs are written to `outputs/`: one JSON and one Markdown file per framework, `execution_log.json`, and `comparison_matrix.csv` / `.md`. The files committed in `outputs/` are from the original thesis run.
 
-- `outputs/langgraph_output.json`
-- `outputs/langgraph_output.md`
-- `outputs/crewai_output.json`
-- `outputs/crewai_output.md`
-- `outputs/autogen_output.json`
-- `outputs/autogen_output.md`
-- `outputs/execution_log.json`
-- `outputs/comparison_matrix.csv`
-- `outputs/comparison_matrix.md`
+## Configuration
 
-The main runner does not crash the entire project if one framework fails. Instead, it records a structured failure result with error details.
+| Variable | Default | Purpose |
+|---|---|---|
+| `OPENAI_API_KEY` | none | Enables live runs; without it the project uses labelled fallback output |
+| `OPENAI_MODEL` | `gpt-4o-mini` | Model used by all frameworks |
+| `MOCK_MODE` | `true` | Skip all API calls |
+| `RUN_LANGGRAPH` / `RUN_CREWAI` / `RUN_AUTOGEN` | `true` | Enable or disable a framework |
+| `MAX_OUTPUT_TOKENS` | `1500` | Output cap; around 500 truncates the JSON (see below) |
+| `MAX_RETRIES` | `1` | Retries per request |
+| `OPENAI_BASE_URL` | none | Point at an OpenAI-compatible endpoint |
 
-## Colab Notebook
+Fallback output is deterministic demonstration content, always labelled as such, and is never reported as a live result. A failing framework does not stop the others; it records a structured failure.
 
-Open `notebooks/thesis_prototype_colab.ipynb` in Google Colab. The notebook explains the prototype, installs dependencies, loads environment variables, runs the same main workflow, and displays the comparison matrix.
+## Project structure
 
-For Colab, upload the full project folder or clone it into the notebook environment before running the cells.
+```
+.
+├── main.py                  # runs all three frameworks and writes outputs
+├── config/settings.py       # environment-based settings
+├── data/                    # input task and evaluation criteria
+├── src/
+│   ├── common/              # shared prompt, validation, output writing, evaluation
+│   ├── langgraph_impl/      # StateGraph with four named nodes
+│   ├── crewai_impl/         # Requirement Analyst, Study Planner, Quality Reviewer
+│   └── autogen_impl/        # Planner and Reviewer conversation
+├── tests/                   # unit tests (run offline)
+├── outputs/                 # results of the thesis run
+├── notebooks/               # Colab notebook that runs the same pipeline
+└── docs/                    # notes written during the thesis
+```
 
-## Evaluation Criteria
+## Evaluation criteria
 
-The qualitative criteria are stored in `data/evaluation_criteria.json`:
+Architecture design, workflow control, state handling, tool integration, agent coordination, transparency and debugging, ease of use, development complexity, output structure, and suitability for lightweight task automation. The criteria live in `data/evaluation_criteria.json`, and the generated matrix reports observations without declaring a winner.
 
-- Architecture design
-- Workflow control
-- State handling
-- Tool integration
-- Agent coordination
-- Transparency and debugging
-- Ease of use
-- Development complexity
-- Output structure
-- Suitability for lightweight task automation
+## Known limitations
 
-The generated comparison matrix uses observed outputs and implementation behavior. It intentionally avoids automatic winner claims.
+- **One task, one run.** Results depend on the model, prompts, framework versions and configuration. Treat them as observations, not rankings.
+- **Truncation.** A 7-day plan needs roughly 900 to 1,200 output tokens. With a cap near 500 the JSON is cut off, parsing fails and the run falls back. This happened in one of my runs, which is why the default is now 1500 and truncation raises an explicit error.
+- **Configuration differs between frameworks.** LangGraph runs at temperature 0, CrewAI at 0.1, and AutoGen uses the client default with no explicit token cap. A fair comparison needs these aligned, which is part of the planned evaluation.
+- **CrewAI has not been run live since the Requirement Analyst was given a task** (it previously had none). That change is covered by syntax checks only.
+- No latency, cost, security or scalability measurements.
 
-## Academic Limitations
+## Status and roadmap
 
-- This prototype is a lightweight academic comparison, not a large-scale benchmark.
-- It does not evaluate enterprise deployment, security, latency, cost, production scalability, or long-running reliability.
-- Outputs depend on model behavior, API availability, framework versions, prompt design, and local Python environment.
-- Failed framework runs should be documented as practical limitations, not hidden or replaced with invented results.
-- Fallback output is deterministic demonstration content and is clearly labelled as such.
+Done since the thesis submission:
 
-## Ethical and Data Note
+- Fixed character-by-character bullets in the Markdown output (the model returned a string where a list was expected)
+- LangGraph now passes its graph state into the model call and uses the same base prompt as the other frameworks
+- Step logs and conversation logs are saved in the outputs
+- CrewAI's Requirement Analyst now actually runs
+- Offline tests and CI
 
-The input task is synthetic and non-sensitive. No personal student data is used.
+Planned:
+
+- [ ] Repeated live runs (10 per framework) with automated output checks: valid JSON, seven days, within the two-hour limit, all topics covered
+- [ ] Pass rate, latency and token cost per framework, with CrewAI run live
+- [ ] Aligned model settings across frameworks
 
 ## Troubleshooting
 
-If a framework fails to import, run:
-
-```bash
-pip install -r requirements.txt
-```
-
-If AutoGen fails due to package changes, verify that both packages are installed:
-
-```bash
-pip install -U "autogen-agentchat" "autogen-ext[openai]"
-```
-
-If CrewAI fails because of dependency conflicts, try a fresh virtual environment with Python 3.10 or newer.
-
-If real LLM execution fails, check:
-
-- `.env` exists
-- `OPENAI_API_KEY` is set
-- `OPENAI_MODEL` is available for your account or provider
-- `OPENAI_BASE_URL` is correct if using an OpenAI-compatible endpoint
-
-## Dependency Note
-
-The framework ecosystem changes quickly. Package names in `requirements.txt` were selected to match current public installation guidance:
-
-- LangGraph: `langgraph`
-- CrewAI: `crewai`
-- AutoGen AgentChat: `autogen-agentchat` and `autogen-ext[openai]`
-
-If future versions change APIs, keep the structured failure logs and document the limitation honestly in the thesis.
+- Import errors: `pip install -r requirements.txt`
+- AutoGen API changes: `pip install -U "autogen-agentchat" "autogen-ext[openai]"`
+- CrewAI dependency conflicts: use a fresh virtual environment with Python 3.10 or newer
+- Live run fails: check that `.env` exists, `OPENAI_API_KEY` is set and the model is available to your account
