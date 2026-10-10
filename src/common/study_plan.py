@@ -162,7 +162,10 @@ def study_plan_to_markdown(plan: dict[str, Any]) -> str:
                 "**Study activities:**",
             ]
         )
-        for activity in item.get("study_activities", []):
+        activities = item.get("study_activities", [])
+        if isinstance(activities, str):  # defensive: never render a string character by character
+            activities = [activities]
+        for activity in activities:
             lines.append(f"- {activity}")
         lines.extend(
             [
@@ -256,6 +259,22 @@ def validate_study_plan(plan: dict[str, Any]) -> None:
         missing_day_fields = day_fields - set(item)
         if missing_day_fields:
             raise ValueError(f"Daily plan entry is missing fields: {sorted(missing_day_fields)}")
+        # Models sometimes return a single string instead of a list when the prompt
+        # asks for "one" item. Normalise it so downstream code never iterates a string.
+        item["study_activities"] = normalize_activities(item["study_activities"])
+
+
+def normalize_activities(value: Any) -> list[str]:
+    """Return study activities as a list of non-empty strings."""
+
+    if isinstance(value, str):
+        value = [value]
+    if not isinstance(value, list):
+        raise ValueError("study_activities must be a string or a list of strings.")
+    activities = [str(entry).strip() for entry in value if str(entry).strip()]
+    if not activities:
+        raise ValueError("study_activities must contain at least one activity.")
+    return activities
 
 
 def empty_plan() -> dict[str, Any]:

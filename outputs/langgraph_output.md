@@ -22,32 +22,7 @@ Revise Python basics and data handling.
 **Learning goal:** Understand Python syntax.
 
 **Study activities:**
-- W
-- a
-- t
-- c
-- h
--  
-- P
-- y
-- t
-- h
-- o
-- n
--  
-- b
-- a
-- s
-- i
-- c
-- s
--  
-- v
-- i
-- d
-- e
-- o
-- .
+- Watch Python basics video.
 
 **Practice task:** Complete basic exercises.
 **Expected outcome:** Familiarity with syntax.
@@ -56,30 +31,7 @@ Revise Python basics and data handling.
 **Learning goal:** Identify Python data types.
 
 **Study activities:**
-- R
-- e
-- a
-- d
--  
-- d
-- a
-- t
-- a
--  
-- t
-- y
-- p
-- e
-- s
--  
-- a
-- r
-- t
-- i
-- c
-- l
-- e
-- .
+- Read data types article.
 
 **Practice task:** Create a data type list.
 **Expected outcome:** Recognize data types.
@@ -88,40 +40,7 @@ Revise Python basics and data handling.
 **Learning goal:** Use loops and conditionals.
 
 **Study activities:**
-- W
-- a
-- t
-- c
-- h
--  
-- c
-- o
-- n
-- t
-- r
-- o
-- l
--  
-- s
-- t
-- r
-- u
-- c
-- t
-- u
-- r
-- e
-- s
--  
-- t
-- u
-- t
-- o
-- r
-- i
-- a
-- l
-- .
+- Watch control structures tutorial.
 
 **Practice task:** Write loop examples.
 **Expected outcome:** Implement loops and conditions.
@@ -130,31 +49,7 @@ Revise Python basics and data handling.
 **Learning goal:** Read and write files.
 
 **Study activities:**
-- R
-- e
-- a
-- d
--  
-- f
-- i
-- l
-- e
--  
-- h
-- a
-- n
-- d
-- l
-- i
-- n
-- g
--  
-- g
-- u
-- i
-- d
-- e
-- .
+- Read file handling guide.
 
 **Practice task:** Create a text file.
 **Expected outcome:** Handle files in Python.
@@ -163,37 +58,7 @@ Revise Python basics and data handling.
 **Learning goal:** Match patterns in strings.
 
 **Study activities:**
-- W
-- a
-- t
-- c
-- h
--  
-- r
-- e
-- g
-- e
-- x
--  
-- i
-- n
-- t
-- r
-- o
-- d
-- u
-- c
-- t
-- i
-- o
-- n
--  
-- v
-- i
-- d
-- e
-- o
-- .
+- Watch regex introduction video.
 
 **Practice task:** Practice regex examples.
 **Expected outcome:** Use regex effectively.
@@ -202,34 +67,7 @@ Revise Python basics and data handling.
 **Learning goal:** Analyze simple datasets.
 
 **Study activities:**
-- R
-- e
-- a
-- d
--  
-- d
-- a
-- t
-- a
--  
-- a
-- n
-- a
-- l
-- y
-- s
-- i
-- s
--  
-- o
-- v
-- e
-- r
-- v
-- i
-- e
-- w
-- .
+- Read data analysis overview.
 
 **Practice task:** Analyze a sample dataset.
 **Expected outcome:** Perform basic data analysis.
@@ -238,33 +76,7 @@ Revise Python basics and data handling.
 **Learning goal:** Consolidate knowledge.
 
 **Study activities:**
-- R
-- e
-- v
-- i
-- e
-- w
--  
-- a
-- l
-- l
--  
-- p
-- r
-- e
-- v
-- i
-- o
-- u
-- s
--  
-- t
-- o
-- p
-- i
-- c
-- s
-- .
+- Review all previous topics.
 
 **Practice task:** Complete a mini-project.
 **Expected outcome:** Apply learned concepts.
