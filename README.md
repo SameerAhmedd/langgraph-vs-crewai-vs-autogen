@@ -4,8 +4,7 @@ Bachelor thesis prototype for IU International University of Applied Sciences.
 
 Thesis title: **Comparative Analysis of Agentic AI Frameworks for Task Automation: Evaluating LangGraph, CrewAI, and AutoGen**
 
-- Author: Sameer Ahmed
-- Enrolment Number: 4235673
+- Author: Sameer Ahmed Shaikh
 
 ## Research Purpose
 
