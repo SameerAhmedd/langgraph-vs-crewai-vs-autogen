@@ -76,7 +76,10 @@ def run_autogen_workflow(task: dict[str, Any], settings: Settings) -> dict[str, 
         "final_answer_markdown": study_plan_to_markdown(plan),
         "final_answer_json": plan,
         "observations": observations,
-        "execution_metadata": build_execution_metadata(started_at, start_time, []),
+        "execution_metadata": {
+            **build_execution_metadata(started_at, start_time, []),
+            "conversation_log": conversation_log,
+        },
     }
 
 
