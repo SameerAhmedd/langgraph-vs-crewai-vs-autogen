@@ -1,10 +1,10 @@
 # LangGraph vs CrewAI vs AutoGen: one task, three agent frameworks
 
-[![CI](https://github.com/SameerAhmedd/Agentic-AI/actions/workflows/ci.yml/badge.svg)](https://github.com/SameerAhmedd/Agentic-AI/actions/workflows/ci.yml)
+[![CI](https://github.com/SameerAhmedd/langgraph-vs-crewai-vs-autogen/actions/workflows/ci.yml/badge.svg)](https://github.com/SameerAhmedd/langgraph-vs-crewai-vs-autogen/actions/workflows/ci.yml)
 
 The same task, a structured 7-day study plan, implemented in three agentic AI frameworks and compared on workflow control, state handling, transparency and development complexity. Each run produces normalised JSON and Markdown output plus an execution log, so the frameworks can be compared on equal terms.
 
-Originally built for my B.Sc. Computer Science thesis at IU International University of Applied Sciences (2026). The exact state described in the thesis is tagged [`thesis-submission`](https://github.com/SameerAhmedd/Agentic-AI/tree/thesis-submission); this branch contains later fixes and extensions (see [Status](#status-and-roadmap)).
+Originally built for my B.Sc. Computer Science thesis at IU International University of Applied Sciences (2026). The exact state described in the thesis is tagged [`thesis-submission`](https://github.com/SameerAhmedd/langgraph-vs-crewai-vs-autogen/tree/thesis-submission); this branch contains later fixes and extensions (see [Status](#status-and-roadmap)).
 
 ## What I found
 
