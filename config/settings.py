@@ -68,7 +68,7 @@ def load_settings() -> Settings:
         run_langgraph=_env_bool("RUN_LANGGRAPH", True),
         run_crewai=_env_bool("RUN_CREWAI", True),
         run_autogen=_env_bool("RUN_AUTOGEN", True),
-        max_output_tokens=_env_int("MAX_OUTPUT_TOKENS", 700),
+        max_output_tokens=_env_int("MAX_OUTPUT_TOKENS", 1500),
         request_timeout_seconds=_env_int("REQUEST_TIMEOUT_SECONDS", 30),
         max_retries=max(0, max_retries),
         use_fallback_mode=mock_mode or legacy_fallback or not api_key,

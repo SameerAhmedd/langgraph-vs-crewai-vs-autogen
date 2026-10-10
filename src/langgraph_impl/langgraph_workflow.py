@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from typing import Any, TypedDict
 
 from config.settings import Settings
@@ -11,7 +12,12 @@ from src.common.logging_utils import (
     build_failure_result,
     start_timer,
 )
-from src.common.study_plan import extract_json_object, generate_fallback_study_plan, study_plan_to_markdown
+from src.common.study_plan import (
+    build_study_plan_prompt,
+    extract_json_object,
+    generate_fallback_study_plan,
+    study_plan_to_markdown,
+)
 
 
 class StudyPlanState(TypedDict, total=False):
@@ -77,7 +83,9 @@ def run_langgraph_workflow(task: dict[str, Any], settings: Settings) -> dict[str
         }
 
     def generate_plan(state: StudyPlanState) -> StudyPlanState:
-        plan = _generate_plan_with_langchain(task, settings)
+        # The prompt is built from the graph state, so the analysis and goal-decomposition
+        # nodes actually feed the generation node instead of being bypassed.
+        plan = _generate_plan_with_langchain(build_langgraph_prompt(state), settings)
         log_entry = "Generated study plan using ChatOpenAI inside a LangGraph node."
 
         return {
@@ -132,11 +140,14 @@ def run_langgraph_workflow(task: dict[str, Any], settings: Settings) -> dict[str
         "final_answer_markdown": final_state["final_answer_markdown"],
         "final_answer_json": final_state["final_answer_json"],
         "observations": observations,
-        "execution_metadata": build_execution_metadata(started_at, start_time, final_state.get("errors", [])),
+        "execution_metadata": {
+            **build_execution_metadata(started_at, start_time, final_state.get("errors", [])),
+            "step_log": final_state.get("step_log", []),
+        },
     }
 
 
-def _generate_plan_with_langchain(task: dict[str, Any], settings: Settings) -> dict[str, Any]:
+def _generate_plan_with_langchain(prompt: str, settings: Settings) -> dict[str, Any]:
     """Generate the plan with LangChain's OpenAI chat wrapper inside LangGraph."""
 
     from langchain_openai import ChatOpenAI
@@ -146,28 +157,40 @@ def _generate_plan_with_langchain(task: dict[str, Any], settings: Settings) -> d
         "api_key": settings.openai_api_key,
         "temperature": 0,
         "timeout": settings.request_timeout_seconds,
-        "max_retries": 0,
+        "max_retries": settings.max_retries,
         "max_tokens": settings.max_output_tokens,
     }
     if settings.openai_base_url:
         llm_kwargs["base_url"] = settings.openai_base_url
 
     llm = ChatOpenAI(**llm_kwargs).bind(response_format={"type": "json_object"})
-    response = llm.invoke(_build_compact_langgraph_prompt(task))
+    response = llm.invoke(prompt)
+
+    metadata = getattr(response, "response_metadata", None) or {}
+    if metadata.get("finish_reason") == "length":
+        raise ValueError(
+            f"Model output was truncated at max_tokens={settings.max_output_tokens}; "
+            "increase MAX_OUTPUT_TOKENS."
+        )
+
     content = response.content if hasattr(response, "content") else str(response)
     return extract_json_object(str(content))
 
 
-def _build_compact_langgraph_prompt(task: dict[str, Any]) -> str:
-    """Build a compact JSON-only prompt for the low-cost LangGraph run."""
+def build_langgraph_prompt(state: StudyPlanState) -> str:
+    """Build the generation prompt from the graph state.
 
-    constraints = task["constraints"]
+    Uses the same shared base prompt as the CrewAI and AutoGen implementations so the
+    three frameworks are compared on an equivalent task, then appends what the earlier
+    graph nodes produced (requirement analysis and decomposed study goals).
+    """
+
+    goal_lines = "\n".join(f"- {goal}" for goal in state.get("study_goals", []))
     return (
-        "Return compact valid JSON only. Create a beginner-friendly 7-day study plan. "
-        f"Student: {task['student_profile']}. Goal: {task['goal']} "
-        f"Time: {constraints['study_time_per_day']} for {constraints['duration_days']} days. "
-        "Keep total output under 450 tokens. Required JSON keys: title, overview, daily_plan, summary. "
-        "daily_plan must have exactly 7 objects with keys: day, topic, learning_goal, "
-        "study_activities, practice_task, expected_outcome. "
-        "Use one short study_activities item per day. Keep every string under 6 words."
+        build_study_plan_prompt(state["task"], "LangGraph")
+        + "\n\nRequirement analysis from the previous graph node:\n"
+        + json.dumps(state.get("requirement_analysis", {}), indent=2)
+        + "\n\nStudy goals from the goal-decomposition node:\n"
+        + goal_lines
+        + "\n\nCover every study goal at least once across the seven days."
     )
